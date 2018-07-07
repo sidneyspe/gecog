@@ -62,6 +62,6 @@ def printResult (meth, output):
     	print "\n"
 
 def printCSV (meth, output):
+    print " \t0\t1\t2"
     for out in output:
-    	for i in range(len(out)):
-    		print "%s;%s;%s" % (str(out[i][0]),str(out[i][1]), str(out[i][2]))
+        print "%s\t%s\t%s\t%s" % (str(out[0][0]),str(out[0][2]), str(out[1][2]), str(out[2][2]))
