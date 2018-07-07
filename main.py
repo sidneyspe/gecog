@@ -26,8 +26,12 @@ THRESHOLDS = [0.9, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99]
 RESULT_FOLDER = "RESULT/"
 
 img = cv2.imread(IMAGE_NAME, 1)
-entries = extractImgs(img, COORD)
 
+img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+img_gray = threshold(110, img_gray )
+img = cv2.cvtColor(img_gray, cv2.COLOR_GRAY2BGR)
+
+entries = extractImgs(img, COORD)
 output = []
 
 for meth in METHODS:
@@ -47,3 +51,22 @@ for meth in METHODS:
 	# print "------------------"
 	printCSV(meth, output)
 	# print "------------------"
+
+
+# img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+#
+# hist,bins = np.histogram(img.flatten(),256,[0,256])
+# # cdf = hist.cumsum()
+# # cdf_normalized = cdf * hist.max()/ cdf.max()
+# # plt.plot(cdf_normalized, color = 'b')
+# # plt.hist(img.flatten(),256,[0,256], color = 'r')
+# # plt.xlim([0,256])
+# # plt.legend(('cdf','histogram'), loc = 'upper left')
+# # plt.show()
+
+# cv2.imshow('teste', img_gray )
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
+#
+# for x in range(len(hist)):
+# 	if(hist[x] != 0): print "%s\t%s" % (x,hist[x])

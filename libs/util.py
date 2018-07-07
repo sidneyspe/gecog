@@ -5,6 +5,9 @@ import cv2
 import math
 import numpy as np
 import glob
+import sys
+import os
+from matplotlib import pyplot as plt
 
 COLORS = [(255,0,0),(0,255,0),(0,0,255)]
 
@@ -39,9 +42,14 @@ def extractImgs(img, coord):
 def templateMatching (method, threshold, img, entries):
     img_rgb = img.copy()
     info = []
+    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # img_gray = cv2.equalizeHist(img_gray)
+    # img_rgb = cv2.cvtColor(img_gray, cv2.COLOR_GRAY2BGR)
     for x in range(len(entries)):
-        img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         template = cv2.cvtColor(entries[x], cv2.COLOR_BGR2GRAY)
+
+        # template = cv2.equalizeHist(template)
+
         w, h = template.shape[::-1]
 
         res = cv2.matchTemplate(img_gray, template, method)
@@ -62,6 +70,18 @@ def printResult (meth, output):
     	print "\n"
 
 def printCSV (meth, output):
+    print "USING highBasicPass\t\t\t"
     print " \t0\t1\t2"
     for out in output:
         print "%s\t%s\t%s\t%s" % (str(out[0][0]),str(out[0][2]), str(out[1][2]), str(out[2][2]))
+
+
+def threshold(threshold, img):
+    imgOut = img.copy()
+    w, h = img.shape[::-1]
+
+    for i in range(0, h):
+        for j in range(0, w):
+            if (imgOut[i][j] >= threshold): imgOut[i][j] = 255
+
+    return imgOut
