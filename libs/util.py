@@ -55,10 +55,28 @@ def templateMatching (method, threshold, img, entries):
         res = cv2.matchTemplate(img_gray, template, method)
         loc = np.where( res >= threshold)
         amountPoint = 0
+        print "\nENTRY %s" % (x)
+        lista = []
         for pt in zip(*loc[::-1]):
             cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), COLORS[x], 2)
+            lista.append(pt)
             amountPoint +=1
         info.append((threshold,x,amountPoint)) # THRESHOLD, LABEL_INDICE, AMOUNT OF POINTS FIND
+
+        # setLocX = set(loc[0])
+        # setLocY = set(loc[1])
+        #
+        # # print "(%s,%s)" % (pt[0], pt[1]),
+        # print sorted(setLocX)
+        # print len(setLocX)
+        # print sorted(setLocY)
+        # print len(setLocY)
+
+        # lista.sort(key=lambda tup: tup[1])  # sorts in place
+        setLocX = set(lista)
+        print sorted(setLocX)
+        print len(setLocX)
+
     return img_rgb, info
 
 def printResult (meth, output):
@@ -70,11 +88,11 @@ def printResult (meth, output):
     	print "\n"
 
 def printCSV (meth, output):
-    print "USING highBasicPass\t\t\t"
+    print "\nUSING THRESHOLD 230 AND GLAUSSIAN BLUR (5,5)\t\t\t"
     print " \t0\t1\t2"
     for out in output:
         print "%s\t%s\t%s\t%s" % (str(out[0][0]),str(out[0][2]), str(out[1][2]), str(out[2][2]))
-
+    print "\n"
 
 def threshold(threshold, img):
     imgOut = img.copy()

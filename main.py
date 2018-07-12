@@ -9,7 +9,8 @@ COORD = [(683,485,50,50),(749,485,50,50),(811,485,50,50)] # Big Image
 METHODS = ['cv2.TM_CCOEFF_NORMED']
 # THRESHOLDS = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 # THRESHOLDS = [0.8, 0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88, 0.89]
-THRESHOLDS = [0.9, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99]
+# THRESHOLDS = [0.9, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99]
+THRESHOLDS = [0.97]
 
 # THRESHOLDS = [
 # 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
@@ -28,8 +29,9 @@ RESULT_FOLDER = "RESULT/"
 img = cv2.imread(IMAGE_NAME, 1)
 
 img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-img_gray = threshold(110, img_gray )
+img_gray = threshold(230, img_gray )
 img = cv2.cvtColor(img_gray, cv2.COLOR_GRAY2BGR)
+img = cv2.GaussianBlur(img,(5,5),0)
 
 entries = extractImgs(img, COORD)
 output = []
@@ -51,22 +53,3 @@ for meth in METHODS:
 	# print "------------------"
 	printCSV(meth, output)
 	# print "------------------"
-
-
-# img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-#
-# hist,bins = np.histogram(img.flatten(),256,[0,256])
-# # cdf = hist.cumsum()
-# # cdf_normalized = cdf * hist.max()/ cdf.max()
-# # plt.plot(cdf_normalized, color = 'b')
-# # plt.hist(img.flatten(),256,[0,256], color = 'r')
-# # plt.xlim([0,256])
-# # plt.legend(('cdf','histogram'), loc = 'upper left')
-# # plt.show()
-
-# cv2.imshow('teste', img_gray )
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
-#
-# for x in range(len(hist)):
-# 	if(hist[x] != 0): print "%s\t%s" % (x,hist[x])
