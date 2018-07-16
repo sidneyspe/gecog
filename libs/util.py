@@ -8,9 +8,12 @@ import glob
 import sys
 import os
 from matplotlib import pyplot as plt
+from math import *
 
 COLORS = [(255,0,0),(0,255,0),(0,0,255)]
 
+def distance (x1, y1, x2, y2):
+    return sqrt( (x2 - x1)**2 + (y2 - y1)**2 )
 
 def makeFolder(folder):
     if not os.path.exists(folder):
@@ -57,25 +60,19 @@ def templateMatching (method, threshold, img, entries):
         amountPoint = 0
         print "\nENTRY %s" % (x)
         lista = []
-        for pt in zip(*loc[::-1]):
-            cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), COLORS[x], 2)
-            lista.append(pt)
-            amountPoint +=1
+        pts = zip(*loc[::-1]) ##concat points
+        pts = sorted(pts, key=lambda x: x[0]) ## sort the points
+        amoutOfRemovedPoints = 0 ## cont of points removed
+        for i in range(0, len(pts) -1):
+            dist = floor(distance(pts[i][1],pts[i][0],pts[i+1][1],pts[i+1][0]))
+            if ( dist > 100): ## condition to point is separeted of other point
+                cv2.rectangle(img_rgb, pts[i], (pts[i][0] + w, pts[i][1] + h), COLORS[x], 2)
+                lista.append(pts[i])
+                amountPoint +=1
+            else:
+                amoutOfRemovedPoints +=1 ## increment cont of points removed
         info.append((threshold,x,amountPoint)) # THRESHOLD, LABEL_INDICE, AMOUNT OF POINTS FIND
-
-        # setLocX = set(loc[0])
-        # setLocY = set(loc[1])
-        #
-        # # print "(%s,%s)" % (pt[0], pt[1]),
-        # print sorted(setLocX)
-        # print len(setLocX)
-        # print sorted(setLocY)
-        # print len(setLocY)
-
-        # lista.sort(key=lambda tup: tup[1])  # sorts in place
-        setLocX = set(lista)
-        print sorted(setLocX)
-        print len(setLocX)
+        print "REMOVED %s" % (amoutOfRemovedPoints)
 
     return img_rgb, info
 
