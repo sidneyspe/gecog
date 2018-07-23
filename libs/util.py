@@ -46,32 +46,35 @@ def templateMatching (method, threshold, img, entries):
     img_rgb = img.copy()
     info = []
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    # img_gray = cv2.equalizeHist(img_gray)
-    # img_rgb = cv2.cvtColor(img_gray, cv2.COLOR_GRAY2BGR)
     for x in range(len(entries)):
         template = cv2.cvtColor(entries[x], cv2.COLOR_BGR2GRAY)
-
-        # template = cv2.equalizeHist(template)
-
         w, h = template.shape[::-1]
-
         res = cv2.matchTemplate(img_gray, template, method)
         loc = np.where( res >= threshold)
-        amountPoint = 0
         print "\nENTRY %s" % (x)
-        lista = []
-        pts = zip(*loc[::-1]) ##concat points
-        pts = sorted(pts, key=lambda x: x[0]) ## sort the points
+        points = []
         amoutOfRemovedPoints = 0 ## cont of points removed
+        newPoints = []
+        pts = zip(*loc[::-1]) ##concat points
+        pts = sorted(pts, key=lambda x: x[0]) ## sort the points of x
         for i in range(0, len(pts) -1):
             dist = floor(distance(pts[i][1],pts[i][0],pts[i+1][1],pts[i+1][0]))
             if ( dist > 100): ## condition to point is separeted of other point
-                cv2.rectangle(img_rgb, pts[i], (pts[i][0] + w, pts[i][1] + h), COLORS[x], 2)
-                lista.append(pts[i])
-                amountPoint +=1
+                points.append(pts[i])
             else:
                 amoutOfRemovedPoints +=1 ## increment cont of points removed
-        info.append((threshold,x,amountPoint)) # THRESHOLD, LABEL_INDICE, AMOUNT OF POINTS FIND
+
+        points = sorted(points, key=lambda x: x[1]) ## sort the points of y
+        for i in range(0, len(points) -1):
+            dist = floor(distance(points[i][1],points[i][0],points[i+1][1],points[i+1][0]))
+            if ( dist > 100):
+                cv2.rectangle(img_rgb, points[i], (points[i][0] + w, points[i][1] + h), COLORS[x], 2)
+                newPoints.append(points[i])
+            else:
+                amoutOfRemovedPoints +=1
+
+        print "POINTS: %s" % (len(newPoints))
+        info.append((threshold,x,len(newPoints))) # THRESHOLD, LABEL_INDICE, AMOUNT OF POINTS FIND
         print "REMOVED %s" % (amoutOfRemovedPoints)
 
     return img_rgb, info
