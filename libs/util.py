@@ -103,3 +103,10 @@ def threshold(threshold, img):
             if (imgOut[i][j] >= threshold): imgOut[i][j] = 255
 
     return imgOut
+
+def printHistogram (img_gray):
+    hist = cv2.calcHist([img_gray],[0],None,[256],[0,256])
+    print "#Histogram"
+    print "Color;Amount"
+    for i in range(len(hist)):
+    	print "%s;%s" % (i, int(hist[i]))
