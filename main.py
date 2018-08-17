@@ -14,31 +14,29 @@ img = cv2.imread(IMAGE_NAME, 1)
 
 img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-printHistogram(img_gray)
+# printHistogram(img_gray)
 
+img_gray = threshold(230, img_gray )
+img = cv2.cvtColor(img_gray, cv2.COLOR_GRAY2BGR)
+img = cv2.GaussianBlur(img,(5,5),0)
 
-#
-# img_gray = threshold(230, img_gray )
-# img = cv2.cvtColor(img_gray, cv2.COLOR_GRAY2BGR)
-# img = cv2.GaussianBlur(img,(5,5),0)
-#
-# entries = extractImgs(img, COORD)
-# output = []
-#
-# for meth in METHODS:
-# 	makeFolder(RESULT_FOLDER + meth)
-# 	for threshold in THRESHOLDS:
-# 		method = eval(meth)
-# 		out, info = templateMatching (method, threshold, img, entries)
-#
-# 		FOLDER = RESULT_FOLDER + meth
-# 		makeFolder(FOLDER)
-#
-# 		FILE = FOLDER + "/" + str(threshold) + '_output.png'
-# 		cv2.imwrite(FILE, out)
-#
-# 		output.append(info)
-#
-# 	# print "------------------"
-# 	printCSV(meth, output)
-# 	# print "------------------"
+entries = extractImgs(img, COORD)
+output = []
+
+for meth in METHODS:
+	makeFolder(RESULT_FOLDER + meth)
+	for threshold in THRESHOLDS:
+		method = eval(meth)
+		out, info = templateMatching (method, threshold, img, entries)
+
+		FOLDER = RESULT_FOLDER + meth
+		makeFolder(FOLDER)
+
+		FILE = FOLDER + "/" + str(threshold) + '_output.png'
+		cv2.imwrite(FILE, out)
+
+		output.append(info)
+
+	# print "------------------"
+	printCSV(meth, output)
+	# print "------------------"

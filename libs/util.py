@@ -44,8 +44,10 @@ def extractImgs(img, coord):
 
 def templateMatching (method, threshold, img, entries):
     img_rgb = img.copy()
+    img2 = img.copy()
     info = []
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    allPoints = []
     for x in range(len(entries)):
         template = cv2.cvtColor(entries[x], cv2.COLOR_BGR2GRAY)
         w, h = template.shape[::-1]
@@ -70,12 +72,39 @@ def templateMatching (method, threshold, img, entries):
             if ( dist > 100):
                 cv2.rectangle(img_rgb, points[i], (points[i][0] + w, points[i][1] + h), COLORS[x], 2)
                 newPoints.append(points[i])
+                allPoints.append(points[i])
+
             else:
                 amoutOfRemovedPoints +=1
 
         print "POINTS: %s" % (len(newPoints))
         info.append((threshold,x,len(newPoints))) # THRESHOLD, LABEL_INDICE, AMOUNT OF POINTS FIND
-        print "REMOVED %s" % (amoutOfRemovedPoints)
+        print "REMOVED %s\n" % (amoutOfRemovedPoints)
+
+    allPoints = sorted(allPoints, key=lambda x: x[1])
+    print "ALL POINTS FINDED"
+    print allPoints
+    print "\n"
+    lineNumber = 0
+    amountFinded = 0
+
+    print "AMOUNT OF POINTS FINDED BY EACH LINE"
+    for i in range (1, len(allPoints) ):
+        # dist = floor(distance(allPoints[i][1],allPoints[i][1],allPoints[i+1][0],allPoints[i+1][1]))
+        # print dist
+        if ( (allPoints[i][1] > (allPoints[i-1][1] + 50))):
+            print "Line: %s = %s" % (lineNumber+1,  amountFinded+1)
+            lineNumber+=1
+            amountFinded = 0
+
+            # cv2.rectangle(img2, allPoints[i], (allPoints[i][0] + w, allPoints[i][1] + h), COLORS[2], 2)
+            # height, width = img2.shape[:2]
+            # res = cv2.resize(img2,(width/3, height/3), interpolation = cv2.INTER_CUBIC)
+            # cv2.imshow("example", res)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
+        else:
+            amountFinded+=1
 
     return img_rgb, info
 
