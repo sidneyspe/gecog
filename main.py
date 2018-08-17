@@ -27,13 +27,15 @@ for meth in METHODS:
 	makeFolder(RESULT_FOLDER + meth)
 	for threshold in THRESHOLDS:
 		method = eval(meth)
-		out, info = templateMatching (method, threshold, img, entries)
+		out, out2, info = templateMatching (method, threshold, img, entries)
 
 		FOLDER = RESULT_FOLDER + meth
 		makeFolder(FOLDER)
 
 		FILE = FOLDER + "/" + str(threshold) + '_output.png'
+		FILE2 = FOLDER + "/" + str(threshold) + '_output2.png'
 		cv2.imwrite(FILE, out)
+		cv2.imwrite(FILE2, out2)
 
 		output.append(info)
 

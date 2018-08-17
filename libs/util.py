@@ -11,7 +11,30 @@ from matplotlib import pyplot as plt
 from math import *
 
 COLORS = [(255,0,0),(0,255,0),(0,0,255)]
-
+COLOR_LINE = [
+(230, 25, 75),
+(60, 180, 75),
+(68, 68, 68),
+(255, 225, 25),
+(0, 130, 200),
+(245, 130, 48),
+(145, 30, 180),
+(70, 240, 240),
+(240, 50, 230),
+(210, 245, 60),
+(250, 190, 190),
+(0, 128, 128),
+(230, 190, 255),
+(170, 110, 40),
+(255, 250, 200),
+(128, 0, 0),
+(170, 255, 195),
+(128, 128, 0),
+(255, 215, 180),
+(0, 0, 128),
+(128, 128, 128),
+(0, 0, 0),
+]
 def distance (x1, y1, x2, y2):
     return sqrt( (x2 - x1)**2 + (y2 - y1)**2 )
 
@@ -94,6 +117,8 @@ def templateMatching (method, threshold, img, entries):
         # print dist
         if ( (allPoints[i][1] > (allPoints[i-1][1] + 50))):
             print "Line: %s = %s" % (lineNumber+1,  amountFinded+1)
+            cv2.rectangle(img2, allPoints[i-1], (allPoints[i-1][0] + w, allPoints[i-1][1] + h), COLOR_LINE[lineNumber], 2)
+
             lineNumber+=1
             amountFinded = 0
 
@@ -104,9 +129,14 @@ def templateMatching (method, threshold, img, entries):
             # cv2.waitKey(0)
             # cv2.destroyAllWindows()
         else:
+            cv2.rectangle(img2, allPoints[i-1], (allPoints[i-1][0] + w, allPoints[i-1][1] + h), COLOR_LINE[lineNumber], 2)
             amountFinded+=1
-
-    return img_rgb, info
+    # height, width = img2.shape[:2]
+    # res = cv2.resize(img2,(width/3, height/3), interpolation = cv2.INTER_CUBIC)
+    # cv2.imshow("example", res)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    return img_rgb, img2,  info
 
 def printResult (meth, output):
     print "USING %s METHOD \n" % (meth)
